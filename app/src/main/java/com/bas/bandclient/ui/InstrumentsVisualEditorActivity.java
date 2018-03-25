@@ -101,6 +101,9 @@ public class InstrumentsVisualEditorActivity extends AppCompatActivity {
             case R.id.action_minus_size:
                 minusInstrumentsSize();
                 break;
+            case android.R.id.home:
+                onBackPressed();
+                break;
         }
         return true;
     }
