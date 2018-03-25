@@ -1,6 +1,5 @@
 package com.bas.bandclient.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -10,21 +9,17 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import com.bas.bandclient.R;
-import com.bas.bandclient.helpers.PresetsHelper;
 import com.bas.bandclient.models.Composition;
 import com.bas.bandclient.models.InstrumentType;
-import com.bas.bandclient.models.db.OnePresetModel;
 
-import java.util.List;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class TracksListActivity extends AppCompatActivity {
 
     public static final String COMPOSITION_EXTRA = "COMPOSITION_EXTRA";
-    @Bind(R.id.lvTracksList)
+    @BindView(R.id.lvTracksList)
     ListView lvTracksList;
 
     private TracksListAdapter adapter;

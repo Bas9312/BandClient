@@ -9,9 +9,11 @@ import com.bas.bandclient.models.OnePreset;
 import com.bas.bandclient.models.Track;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * Created by bas on 3/13/18.
@@ -40,35 +42,44 @@ public class CompositionBinder {
 
         for (Map.Entry<InstrumentType, List<NoteToPlay>> entry : toPlayHashMap.entrySet()) {
             InstrumentType instrumentType = entry.getKey();
-            List<NoteToPlay> notesToBind = entry.getValue();
+            Stack<NoteToPlay> notesToBind = new Stack<>();
+            List<NoteToPlay> values = entry.getValue();
+            Collections.reverse(values);
+            notesToBind.addAll(values);
             List<OnePreset> presetsToBind = presetsByInstrumentType.get(instrumentType);
             if (presetsToBind == null || presetsToBind.size() == 0) {
                 System.out.println("No one can't play " + instrumentType.toString());
                 return null;
             }
-
-            for (NoteToPlay oneNote : notesToBind) {
-                List<OnePreset> presetsThatCanPlayNote = getPresetsThatCanPlayNote(oneNote, presetsToBind);
-                boolean isAdded = false;
-                for (OnePreset preset : presetsThatCanPlayNote) {
-                    NoteToPlay lastNote = dataToPlay.getLastNoteForPreset(preset);
-
-                    if (lastNote == null
-                            || (lastNote.getTimeInMs() + lastNote.getLengthInMs() + TIME_BETWEEN_NOTES) < oneNote.getTimeInMs()) {
-                        dataToPlay.addNoteToPreset(preset, oneNote);
-                        isAdded = true;
-                        break;
-                    }
-                }
-
-                if (!isAdded) {
-                    System.out.println("No one can't play note " + oneNote.toString());
-                    return null;
-                }
-            }
+            dataToPlay = addNoteToPlay(dataToPlay, presetsToBind, notesToBind);
+            if (dataToPlay == null) return null;
         }
 
         return dataToPlay;
+    }
+
+    private static DataToPlay addNoteToPlay(DataToPlay dataToPlay, List<OnePreset> presetsToBind, Stack<NoteToPlay> notesToBind) {
+        if (notesToBind.empty()) {
+            return dataToPlay;
+        }
+        NoteToPlay noteToPlay = notesToBind.pop();
+        List<OnePreset> presetsThatCanPlayNote = getPresetsThatCanPlayNote(noteToPlay, presetsToBind);
+        for (OnePreset preset : presetsThatCanPlayNote) {
+            NoteToPlay lastNote = dataToPlay.getLastNoteForPreset(preset);
+
+            if (lastNote == null
+                    || (lastNote.getTimeInMs() + lastNote.getLengthInMs() + TIME_BETWEEN_NOTES) <= noteToPlay.getTimeInMs()) {
+                dataToPlay.addNoteToPreset(preset, noteToPlay);
+                DataToPlay dataForReturn = addNoteToPlay(dataToPlay, presetsToBind, notesToBind);
+                if (dataForReturn != null) {
+                    return dataForReturn;
+                } else {
+                    dataToPlay.removeLastNoteFromPreset(preset);
+                }
+            }
+        }
+        notesToBind.push(noteToPlay);
+        return null;
     }
 
     private static List<OnePreset> getPresetsThatCanPlayNote(NoteToPlay oneNote, List<OnePreset> presetsToBind) {

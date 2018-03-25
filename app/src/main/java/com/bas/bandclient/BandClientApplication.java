@@ -18,7 +18,7 @@ public class BandClientApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Realm.setDefaultConfiguration(new RealmConfiguration.Builder(this).build());
+        Realm.setDefaultConfiguration(new RealmConfiguration.Builder().build());
         if (OneTypeModel.getAllTypes().size() == 0) {
             OneTypeModel.addNewModel("blop");
             OneTypeModel.addNewModel("blow");

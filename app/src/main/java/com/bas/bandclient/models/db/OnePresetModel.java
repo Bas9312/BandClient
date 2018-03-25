@@ -24,7 +24,7 @@ public class OnePresetModel extends RealmObject {
     private RealmList<OneNoteModel> notes;
 
     public static OnePresetModel createNewModel(String presetName) {
-        Realm realm = Realm.getInstance(new RealmConfiguration.Builder(BandClientApplication.getContext()).build());
+        Realm realm = Realm.getDefaultInstance();
         int key;
         try {
             key = realm.where(OnePresetModel.class).max("id").intValue() + 1;
@@ -40,7 +40,7 @@ public class OnePresetModel extends RealmObject {
     }
 
     public static List<OnePresetModel> getAll() {
-        RealmResults<OnePresetModel> realmResults = Realm.getInstance(new RealmConfiguration.Builder(BandClientApplication.getContext()).build()).where(OnePresetModel.class).findAll();
+        RealmResults<OnePresetModel> realmResults = Realm.getDefaultInstance().where(OnePresetModel.class).findAll();
         List<OnePresetModel> result = new ArrayList<>();
         for (OnePresetModel onePresetModel : realmResults) {
             result.add(onePresetModel);
@@ -53,7 +53,7 @@ public class OnePresetModel extends RealmObject {
     }
 
     public void setPresetName(String presetName) {
-        Realm realm = Realm.getInstance(new RealmConfiguration.Builder(BandClientApplication.getContext()).build());
+        Realm realm = Realm.getDefaultInstance();
         realm.beginTransaction();
         this.presetName = presetName;
         realm.commitTransaction();

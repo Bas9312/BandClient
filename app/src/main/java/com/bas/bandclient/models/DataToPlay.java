@@ -24,4 +24,12 @@ public class DataToPlay {
 
         return innerData.get(onePreset).getLastNote();
     }
+
+    public void removeLastNoteFromPreset(OnePreset onePreset) {
+        if (!innerData.containsKey(onePreset)) {
+            innerData.put(onePreset, new DataToPlayForOnePreset(onePreset));
+        }
+
+        innerData.get(onePreset).removeLastNote();
+    }
 }

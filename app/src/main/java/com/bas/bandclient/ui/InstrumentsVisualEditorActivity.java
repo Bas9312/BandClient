@@ -16,15 +16,15 @@ import android.widget.Toast;
 
 import com.bas.bandclient.R;
 import com.bas.bandclient.helpers.ConvertHelper;
+import com.bas.bandclient.models.PresetManager;
 import com.bas.bandclient.models.db.OneNoteModel;
 import com.bas.bandclient.models.db.OnePresetModel;
-import com.bas.bandclient.models.PresetManager;
 import com.bas.bandclient.ui.widgets.NoteView;
 import com.bas.bandclient.ui.widgets.OneVisualNote;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
  */
 
 public class InstrumentsVisualEditorActivity extends AppCompatActivity {
-    @Bind(R.id.flFrame)
+    @BindView(R.id.flFrame)
     FrameLayout flFrame;
 
     private ArrayList<OneVisualNote> noteViews = new ArrayList<>();

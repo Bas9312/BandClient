@@ -8,14 +8,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.bas.bandclient.R;
 import com.bas.bandclient.models.InstrumentType;
 import com.bas.bandclient.models.PresetManager;
 import com.bas.bandclient.models.db.OnePresetModel;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -24,13 +23,13 @@ import butterknife.ButterKnife;
 
 public class EnterPresetNameActivity extends AppCompatActivity {
 
-    @Bind(R.id.etInstrumentName)
+    @BindView(R.id.etInstrumentName)
     EditText etInstrumentName;
 
-    @Bind(R.id.spInstrumentType)
+    @BindView(R.id.spInstrumentType)
     Spinner spInstrumentType;
 
-    @Bind(R.id.btnNext)
+    @BindView(R.id.btnNext)
     Button btnNext;
 
     @Override

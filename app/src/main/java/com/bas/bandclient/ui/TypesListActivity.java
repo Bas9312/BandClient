@@ -9,11 +9,10 @@ import android.widget.ListView;
 
 import com.bas.bandclient.R;
 import com.bas.bandclient.models.InstrumentType;
-import com.bas.bandclient.models.db.OnePresetModel;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -22,7 +21,7 @@ import butterknife.ButterKnife;
 
 public class TypesListActivity extends AppCompatActivity {
 
-    @Bind(R.id.lvInstrumentsList)
+    @BindView(R.id.lvInstrumentsList)
     ListView lvInstrumentsList;
 
     @Override

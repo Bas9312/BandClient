@@ -10,25 +10,20 @@ import android.widget.Button;
 import com.bas.bandclient.R;
 import com.bas.bandclient.helpers.FileReadHelper;
 import com.bas.bandclient.models.Composition;
-import com.bas.bandclient.models.Note;
-import com.bas.bandclient.models.NoteToPlay;
 import com.bas.bandclient.models.Track;
 
-import java.util.HashMap;
-import java.util.List;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends Activity {
 
-    @Bind(R.id.btnInstrumentsList)
+    @BindView(R.id.btnInstrumentsList)
     Button btnInstrumentsList;
 
-    @Bind(R.id.btnTypesList)
+    @BindView(R.id.btnTypesList)
     Button btnTypesList;
 
-    @Bind(R.id.btnReadFile)
+    @BindView(R.id.btnReadFile)
     Button btnReadFile;
 
     @Override
