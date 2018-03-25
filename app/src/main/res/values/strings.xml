@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">BandClient</string>
+    <string name="enter_preset_name">Enter preset name</string>
+    <string name="enter_type_name">Enter type name</string>
+    <string name="first_note">First noteText</string>
+    <string name="add_new">Add new</string>
+    <string name="next">Next</string>
+    <string name="select_preset_type">Select preset type</string>
+    <string name="confirm_save">На экране есть несохраненные изменения, сохранить перед выходом?</string>
+    <string name="save">Сохранить</string>
+    <string name="close">Просто закрыть</string>
+</resources>

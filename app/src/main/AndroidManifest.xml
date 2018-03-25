@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.bas.bandclient">
+
+    <application
+        android:name=".BandClientApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".ui.InstrumentsVisualEditorActivity"
+            android:screenOrientation="landscape"
+            android:parentActivityName=".ui.InstrumentsListActivity"/>
+
+        <activity android:name=".ui.InstrumentsListActivity">
+        </activity>
+
+        <activity android:name=".ui.EnterPresetNameActivity"
+            android:parentActivityName=".ui.InstrumentsListActivity"/>
+
+        <activity android:name=".ui.TracksListActivity"
+            android:parentActivityName=".ui.MainActivity"/>
+
+        <activity android:name=".ui.TypesListActivity"
+            android:parentActivityName=".ui.MainActivity"/>
+
+        <activity android:name=".ui.EnterTypeNameActivity"
+            android:parentActivityName=".ui.MainActivity"/>
+    </application>
+
+</manifest>

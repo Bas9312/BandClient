@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#33ff33</color>
+
+    <color name="white">#ebf0f1</color>
+    <color name="button_green">#00b05a</color>
+    <color name="button_green_border">#00954c</color>
+
+    <color name="btn_available_background">#8000cd6b</color>
+    <color name="btn_available_background_pressed">#00cd6b</color>
+    <color name="btn_available_border">#8000b05a</color>
+</resources>
