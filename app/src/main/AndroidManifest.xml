@@ -34,6 +34,10 @@
 
         <activity android:name=".ui.EnterTypeNameActivity"
             android:parentActivityName=".ui.MainActivity"/>
+
+        <activity android:name=".ui.play.PlayingActivity"
+            android:screenOrientation="landscape"
+            android:parentActivityName=".ui.MainActivity"/>
     </application>
 
 </manifest>

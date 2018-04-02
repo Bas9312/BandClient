@@ -46,5 +46,4 @@ public class OneVisualNote {
     public String toString() {
         return "name: " + (note != null ? note.toString() : "null") + ", size: " + size + ", x: " + x + ", y: " + y;
     }
-
 }

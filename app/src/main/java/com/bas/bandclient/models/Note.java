@@ -25,7 +25,7 @@ public class Note implements Serializable, Comparable {
     public static final Note H = new Note("H");
     private final String stringRepresentation;
 
-    private static final Pattern forParse = Pattern.compile("(\\D+)(\\d)");
+    private static final Pattern forParse = Pattern.compile("(\\D+#?)(\\d)");
 
     Octave octave;
 
