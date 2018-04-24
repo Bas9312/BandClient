@@ -9,6 +9,7 @@ import android.widget.ListView;
 
 import com.bas.bandclient.R;
 import com.bas.bandclient.models.db.OnePresetModel;
+import com.bas.bandclient.ui.play.PlayingActivity;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by bas on 10.11.16.
  */
 
-public class InstrumentsListActivity extends AppCompatActivity {
+public class SelectPresetActivity extends AppCompatActivity {
 
     @BindView(R.id.lvInstrumentsList)
     ListView lvInstrumentsList;
@@ -37,16 +38,13 @@ public class InstrumentsListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        lvInstrumentsList.setAdapter(new InstrumentsListAdapter(OnePresetModel.getAll(), this));
+        lvInstrumentsList.setAdapter(new PresetsListAdapter(OnePresetModel.getAll(), this, false));
         lvInstrumentsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 List<OnePresetModel> allPresets = OnePresetModel.getAll();
-                if (position >= allPresets.size()) startActivity(new Intent(InstrumentsListActivity.this, EnterPresetNameActivity.class));
-                else {
-                    OnePresetModel preset = allPresets.get(position);
-                    startActivity(new Intent(InstrumentsListActivity.this, InstrumentsVisualEditorActivity.class).putExtra("presetId", preset.getId()));
-                }
+                OnePresetModel preset = allPresets.get(position);
+                startActivity(new Intent(SelectPresetActivity.this, PlayingActivity.class).putExtra("presetId", preset.getId()));
             }
         });
     }

@@ -9,4 +9,5 @@
     <string name="confirm_save">На экране есть несохраненные изменения, сохранить перед выходом?</string>
     <string name="save">Сохранить</string>
     <string name="close">Просто закрыть</string>
+    <string name="searched_devices">Searched devices</string>
 </resources>

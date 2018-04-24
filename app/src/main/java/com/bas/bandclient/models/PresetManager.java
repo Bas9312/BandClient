@@ -53,4 +53,16 @@ public class PresetManager {
     public static List<OneNoteModel> getNotes(OnePresetModel preset) {
         return preset.getNotes().subList(0, preset.getNotes().size());
     }
+    public static String getNotesString(OnePresetModel preset) {
+        StringBuilder notesString = new StringBuilder();
+
+        for (OneNoteModel oneNoteModel : PresetManager.getNotes(preset)) {
+            notesString.append(oneNoteModel.getNote().toString()).append(", ");
+        }
+
+        if (notesString.length() > 0) {
+            notesString.delete(notesString.length() - 2, notesString.length() - 1);
+        }
+        return notesString.toString();
+    }
 }

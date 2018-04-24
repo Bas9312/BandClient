@@ -12,6 +12,7 @@ import com.bas.bandclient.helpers.FileReadHelper;
 import com.bas.bandclient.models.Composition;
 import com.bas.bandclient.models.Track;
 import com.bas.bandclient.ui.play.PlayingActivity;
+import com.bas.bandclient.ui.searchDevices.SearchDevicesActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +31,10 @@ public class MainActivity extends Activity {
     @BindView(R.id.btnPlaying)
     Button btnPlaying;
 
+    @BindView(R.id.btnConduct)
+    Button btnConduct;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +44,7 @@ public class MainActivity extends Activity {
         btnInstrumentsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, InstrumentsListActivity.class));
+                startActivity(new Intent(MainActivity.this, PresetsListActivity.class));
             }
         });
 
@@ -80,7 +85,14 @@ public class MainActivity extends Activity {
         btnPlaying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, PlayingActivity.class));
+                startActivity(new Intent(MainActivity.this, SelectPresetActivity.class));
+            }
+        });
+
+        btnConduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SearchDevicesActivity.class));
             }
         });
     }

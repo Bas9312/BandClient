@@ -3,7 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BandClient.iml" filepath="$PROJECT_DIR$/BandClient.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/BandClient-app.iml" filepath="$PROJECT_DIR$/app/BandClient-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/submodules/api/api.iml" filepath="$PROJECT_DIR$/submodules/api/api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/submodules/api/app/api-app.iml" filepath="$PROJECT_DIR$/submodules/api/app/api-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/submodules/coala/coala.iml" filepath="$PROJECT_DIR$/submodules/coala/coala.iml" />
+      <module fileurl="file://$PROJECT_DIR$/submodules/api/submodules/coala/app/coala-app.iml" filepath="$PROJECT_DIR$/submodules/api/submodules/coala/app/coala-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/submodules/api/submodules/coala/libs/infrastructure/infrastructure.iml" filepath="$PROJECT_DIR$/submodules/api/submodules/coala/libs/infrastructure/infrastructure.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libs/libs.iml" filepath="$PROJECT_DIR$/libs/libs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/submodules/submodules.iml" filepath="$PROJECT_DIR$/submodules/submodules.iml" />
     </modules>
   </component>
 </project>

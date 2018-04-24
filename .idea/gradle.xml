@@ -9,6 +9,13 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/libs" />
+            <option value="$PROJECT_DIR$/submodules" />
+            <option value="$PROJECT_DIR$/submodules/api" />
+            <option value="$PROJECT_DIR$/submodules/api/app" />
+            <option value="$PROJECT_DIR$/submodules/api/submodules/coala/app" />
+            <option value="$PROJECT_DIR$/submodules/api/submodules/coala/libs/infrastructure" />
+            <option value="$PROJECT_DIR$/submodules/coala" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

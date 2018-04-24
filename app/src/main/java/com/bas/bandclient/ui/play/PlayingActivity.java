@@ -17,6 +17,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.bas.bandclient.BandClientApplication;
+import com.bas.bandclient.Consts;
 import com.bas.bandclient.R;
 import com.bas.bandclient.helpers.ConvertHelper;
 import com.bas.bandclient.models.Note;
@@ -78,8 +80,7 @@ public class PlayingActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         ButterKnife.bind(this);
-        //Integer presetId = getIntent().getIntExtra("presetId", -1);
-        Integer presetId = 0;
+        Integer presetId = getIntent().getIntExtra("presetId", -1);
         if (presetId != -1) preset = OnePresetModel.getById(presetId);
 
         if (preset == null) {
@@ -140,8 +141,16 @@ public class PlayingActivity extends AppCompatActivity {
 
     protected void onResume() {
         super.onResume();
+
+        BandClientApplication.getContext().getStorage().put(Consts.PREFS_CURRENT_NOTES, PresetManager.getNotesString(preset));
         timeOfStart = System.currentTimeMillis();
-        handler.postDelayed(runnable, 1000);
+        //handler.postDelayed(runnable, 1000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BandClientApplication.getContext().getStorage().put(Consts.PREFS_CURRENT_NOTES, "");
     }
 
     private PlayingNoteView getNoteViewByNote(NoteToPlay nextNote) {

@@ -2,6 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bas.bandclient">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name=".BandClientApplication"
         android:allowBackup="true"
@@ -18,13 +27,13 @@
 
         <activity android:name=".ui.InstrumentsVisualEditorActivity"
             android:screenOrientation="landscape"
-            android:parentActivityName=".ui.InstrumentsListActivity"/>
+            android:parentActivityName=".ui.PresetsListActivity"/>
 
-        <activity android:name=".ui.InstrumentsListActivity">
+        <activity android:name=".ui.PresetsListActivity">
         </activity>
 
         <activity android:name=".ui.EnterPresetNameActivity"
-            android:parentActivityName=".ui.InstrumentsListActivity"/>
+            android:parentActivityName=".ui.PresetsListActivity"/>
 
         <activity android:name=".ui.TracksListActivity"
             android:parentActivityName=".ui.MainActivity"/>
@@ -37,6 +46,12 @@
 
         <activity android:name=".ui.play.PlayingActivity"
             android:screenOrientation="landscape"
+            android:parentActivityName=".ui.SelectPresetActivity"/>
+
+        <activity android:name=".ui.SelectPresetActivity"
+            android:parentActivityName=".ui.MainActivity"/>
+
+        <activity android:name=".ui.searchDevices.SearchDevicesActivity"
             android:parentActivityName=".ui.MainActivity"/>
     </application>
 
