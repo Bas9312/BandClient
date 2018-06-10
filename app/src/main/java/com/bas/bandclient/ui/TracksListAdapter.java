@@ -18,14 +18,12 @@ import java.util.List;
 public class TracksListAdapter extends ArrayAdapter<Track> {
 
     private final List<Track> tracks;
-    private final String[] presets;
     private final Activity context;
     private final LayoutInflater mLayoutInflater;
 
     public TracksListAdapter(List<Track> allTracks, Activity context) {
-        super(context, R.layout.one_instrument_element, allTracks);
+        super(context, R.layout.one_track_element, allTracks);
         this.tracks = allTracks;
-        this.presets = new String[tracks.size()];
         this.mLayoutInflater = LayoutInflater.from(context);
         this.context = context;
     }
@@ -34,10 +32,10 @@ public class TracksListAdapter extends ArrayAdapter<Track> {
     public View getView(final int pos, View convertView, ViewGroup viewGroup) {
         final Track track = tracks.get(pos);
 
-        View view = mLayoutInflater.inflate(R.layout.one_instrument_element, null);
+        View view = mLayoutInflater.inflate(R.layout.one_track_element, null);
         TextView textView = (TextView) view.findViewById(R.id.tvName);
         if (textView != null) textView.setText(track.getName());
-        if (presets[pos] != null) view.setBackgroundColor(context.getResources().getColor(R.color.button_green));
+        if (tracks.get(pos).getType() != null) view.setBackgroundColor(context.getResources().getColor(R.color.button_green));
 
         return view;
     }

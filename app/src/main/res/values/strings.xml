@@ -10,4 +10,6 @@
     <string name="save">Сохранить</string>
     <string name="close">Просто закрыть</string>
     <string name="searched_devices">Searched devices</string>
+    <string name="needed_notes">Needed notes: %s</string>
+    <string name="decompose">Decompose</string>
 </resources>

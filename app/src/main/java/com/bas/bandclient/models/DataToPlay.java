@@ -32,4 +32,9 @@ public class DataToPlay {
 
         innerData.get(onePreset).removeLastNote();
     }
+
+    @Override
+    public String toString() {
+        return "Number of presets: " + innerData.size();
+    }
 }

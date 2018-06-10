@@ -57,7 +57,7 @@ public class PresetManager {
         StringBuilder notesString = new StringBuilder();
 
         for (OneNoteModel oneNoteModel : PresetManager.getNotes(preset)) {
-            notesString.append(oneNoteModel.getNote().toString()).append(", ");
+            notesString.append(preset.getType()).append(" ").append(oneNoteModel.getNote().toString()).append(", ");
         }
 
         if (notesString.length() > 0) {

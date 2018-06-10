@@ -2,6 +2,7 @@ package com.bas.bandclient.models;
 
 import com.bas.bandclient.models.db.OneTypeModel;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * Created by bas on 20.12.17.
  */
 
-public class InstrumentType {
+public class InstrumentType implements Serializable {
     private String name;
 
     public InstrumentType(String name) {

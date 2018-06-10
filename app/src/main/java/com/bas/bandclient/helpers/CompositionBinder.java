@@ -21,7 +21,7 @@ import java.util.Stack;
 
 public class CompositionBinder {
 
-    public static Long TIME_BETWEEN_NOTES = 1000L;
+    public static Long TIME_BETWEEN_NOTES = 500L;
 
     public static DataToPlay bind(Composition composition, List<OnePreset> presetModelList) {
         HashMap<InstrumentType, List<NoteToPlay>> toPlayHashMap = getNotesByInstrumentType(composition);
@@ -46,7 +46,13 @@ public class CompositionBinder {
             List<NoteToPlay> values = entry.getValue();
             Collections.reverse(values);
             notesToBind.addAll(values);
-            List<OnePreset> presetsToBind = presetsByInstrumentType.get(instrumentType);
+            List<OnePreset> presetsToBind = null;
+
+            for (Map.Entry<InstrumentType, List<OnePreset>> instrumentTypeOnePresetEntry : presetsByInstrumentType.entrySet()) {
+                if (instrumentTypeOnePresetEntry.getKey().toString().equals(instrumentType.toString()))
+                    presetsToBind = instrumentTypeOnePresetEntry.getValue();
+            }
+
             if (presetsToBind == null || presetsToBind.size() == 0) {
                 System.out.println("No one can't play " + instrumentType.toString());
                 return null;

@@ -33,6 +33,11 @@ public class Note implements Serializable, Comparable {
         this.stringRepresentation = stringRepresentation;
     }
 
+    public Note(Note note, Octave octave) {
+        this.stringRepresentation = note.stringRepresentation;
+        this.octave = octave;
+    }
+
     public static Note parseFromString(String s) {
         Matcher m = forParse.matcher(s);
         if (m.matches()) {

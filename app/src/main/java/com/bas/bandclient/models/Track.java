@@ -17,6 +17,13 @@ public class Track implements Serializable {
         this.name = name;
     }
 
+
+    public Track(List<NoteToPlay> noteToPlays, String name, InstrumentType instrumentType) {
+        this.noteToPlays = noteToPlays;
+        this.name = name;
+        this.type = instrumentType;
+    }
+
     public List<NoteToPlay> getNoteToPlays() {
         return noteToPlays;
     }

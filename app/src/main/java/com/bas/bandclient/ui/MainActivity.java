@@ -8,11 +8,21 @@ import android.view.View;
 import android.widget.Button;
 
 import com.bas.bandclient.R;
+import com.bas.bandclient.helpers.CompositionBinder;
 import com.bas.bandclient.helpers.FileReadHelper;
 import com.bas.bandclient.models.Composition;
+import com.bas.bandclient.models.DataToPlay;
+import com.bas.bandclient.models.InstrumentType;
+import com.bas.bandclient.models.Note;
+import com.bas.bandclient.models.OnePreset;
 import com.bas.bandclient.models.Track;
 import com.bas.bandclient.ui.play.PlayingActivity;
 import com.bas.bandclient.ui.searchDevices.SearchDevicesActivity;
+import com.ndmsystems.infrastructure.logging.LogHelper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,6 +50,15 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        Composition composition = FileReadHelper.readFile();
+        List<OnePreset> presetList = new ArrayList<>();
+        List<Note> noteList = Arrays.asList(new Note(Note.D_SHARP, Note.Octave.GREAT), new Note(Note.A, Note.Octave.GREAT), new Note(Note.D, Note.Octave.GREAT));
+        OnePreset onePreset = new OnePreset("test", InstrumentType.fromString("blop"), noteList);
+        presetList.add(onePreset);
+
+        DataToPlay dataToPlay = CompositionBinder.bind(composition, presetList);
+        LogHelper.e("Data to play: " + (dataToPlay == null ? "null" : dataToPlay.toString()));
 
         btnInstrumentsList.setOnClickListener(new View.OnClickListener() {
             @Override

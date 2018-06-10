@@ -1,16 +1,19 @@
 package com.bas.bandclient.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 
 import com.bas.bandclient.R;
 import com.bas.bandclient.models.Composition;
 import com.bas.bandclient.models.InstrumentType;
+import com.bas.bandclient.ui.searchDevices.SearchDevicesActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +25,12 @@ public class TracksListActivity extends AppCompatActivity {
     @BindView(R.id.lvTracksList)
     ListView lvTracksList;
 
+    @BindView(R.id.next)
+    Button next;
+
     private TracksListAdapter adapter;
+
+    Composition composition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +45,7 @@ public class TracksListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        Composition composition = (Composition) getIntent().getSerializableExtra(COMPOSITION_EXTRA);
+        composition = (Composition) getIntent().getSerializableExtra(COMPOSITION_EXTRA);
 
         adapter = new TracksListAdapter(composition.getTrackList(), this);
         lvTracksList.setAdapter(adapter);
@@ -60,6 +68,13 @@ public class TracksListActivity extends AppCompatActivity {
                 }
 
                 popupMenu.show();
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(TracksListActivity.this, SearchDevicesActivity.class).putExtra(COMPOSITION_EXTRA, composition));
             }
         });
     }
