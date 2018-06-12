@@ -44,6 +44,7 @@ dependencies {
     implementation "com.android.support:multidex:1.0.2"
     testCompile 'junit:junit:4.12'
     implementation project(path: ':submodules:api:app')
+    implementation "com.google.code.gson:gson:2.8.1"
 
     compile 'com.google.code.gson:gson:2.7'
     compile 'cz.msebera.android:httpclient:4.4.1.1'

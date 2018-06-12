@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import com.bas.bandclient.models.DataToPlayForOnePreset;
 import com.bas.bandclient.models.db.OneTypeModel;
 import com.bas.bandclient.storage.IStorage;
 import com.bas.bandclient.storage.SharedPreferencesStorage;
@@ -26,6 +27,8 @@ import com.ndmsystems.infrastructure.logging.collector.LogsCollector;
 import java.util.HashMap;
 import java.util.UUID;
 
+import io.reactivex.Observable;
+import io.reactivex.internal.operators.maybe.MaybeToObservable;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -38,6 +41,11 @@ public class BandClientApplication extends Application {
     private static BandClientApplication instance;
     private static IStorage storage;
     private static ICoalaStorage coalaStorage;
+    private OnStartPlay onStartPlay;
+
+    public void setOnStartPlay(OnStartPlay onStartPlay) {
+        this.onStartPlay = onStartPlay;
+    }
 
     public IStorage getStorage() {
         return storage;
@@ -99,6 +107,18 @@ public class BandClientApplication extends Application {
             }
         });
 
+        KeeneticAPI.getDependencyGraph().getGumService().getCoala().addResource("play", CoAPRequestMethod.POST, new CoAPResource.CoAPResourceHandler() {
+            @Override
+            public CoAPResourceOutput onReceive(CoAPResourceInput inputData) {
+                DataToPlayForOnePreset dataToPlayForOnePreset = DataToPlayForOnePreset.deserialize(inputData.message.getPayload().toString());
+                if (onStartPlay != null) {
+                    onStartPlay.onStartPlay(dataToPlayForOnePreset);
+                }
+                LogHelper.d("Receive: " + inputData.message.getPayload().toString() + " " + dataToPlayForOnePreset);
+                return new CoAPResourceOutput(new CoAPMessagePayload("Ok!"), CoAPMessageCode.CoapCodeContent, CoAPMessage.MediaType.Json);
+            }
+        });
+
         KeeneticAPI.getDependencyGraph().getGumService().start();
     }
 
@@ -154,5 +174,9 @@ public class BandClientApplication extends Application {
 
     public static BandClientApplication getContext() {
         return instance;
+    }
+
+    public interface OnStartPlay {
+        public void onStartPlay(DataToPlayForOnePreset dataToPlayForOnePreset);
     }
 }

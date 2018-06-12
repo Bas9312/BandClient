@@ -15,6 +15,7 @@ import com.bas.bandclient.R;
 import com.bas.bandclient.helpers.CompositionBinder;
 import com.bas.bandclient.models.Composition;
 import com.bas.bandclient.models.DataToPlay;
+import com.bas.bandclient.models.DataToPlayForOnePreset;
 import com.bas.bandclient.models.DeviceModel;
 import com.bas.bandclient.models.InstrumentType;
 import com.bas.bandclient.models.Note;
@@ -27,7 +28,9 @@ import com.ndmsystems.api.gum.GumService;
 import com.ndmsystems.api.helpers.InfoHelper;
 import com.ndmsystems.api.localDeviceDiscovery.LocalDevicesDiscoverer;
 import com.ndmsystems.api.session.P2PSession;
+import com.ndmsystems.coala.message.CoAPMessage;
 import com.ndmsystems.coala.message.CoAPMessageCode;
+import com.ndmsystems.coala.message.CoAPMessageType;
 import com.ndmsystems.coala.resource_discovery.ResourceDiscoveryResult;
 import com.ndmsystems.infrastructure.logging.LogHelper;
 
@@ -52,8 +55,13 @@ import static com.bas.bandclient.ui.TracksListActivity.COMPOSITION_EXTRA;
 public class SearchDevicesActivity extends Activity implements DeviceAdapter.Listener {
     @BindView(R.id.tvNeededNotes)
     protected TextView tvNeededNotes;
+
     @BindView(R.id.btnDecompose)
     protected Button btnDecompose;
+
+    @BindView(R.id.btnStart)
+    protected Button btnStart;
+
     @BindView(R.id.devices)
     protected RecyclerView devices;
 
@@ -63,6 +71,7 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
     private Disposable discover;
     private GumService gumService = KeeneticAPI.getDependencyGraph().getGumService();
     private List<DeviceModel> devicesList;
+    private DataToPlay dataToPlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +94,7 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
 
         tvNeededNotes.setText(getString(R.string.needed_notes, stringBuilder.toString()));
 
-
+        btnStart.setEnabled(false);
         adapter = new DeviceAdapter(this);
         devices.setAdapter(adapter);
         devices.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -94,7 +103,6 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
             @Override
             public void onClick(View view) {
                 List<OnePreset> presets = new ArrayList<>();
-
 
                 for (DeviceModel deviceModel : devicesList) {
                     List<Note> notesList = new ArrayList<>();
@@ -109,14 +117,34 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
 
                     presets.add(new OnePreset(deviceModel.getName(), InstrumentType.fromString(type), notesList));
                 }
-                DataToPlay dataToPlay = CompositionBinder.bind(composition, presets);
+                dataToPlay = CompositionBinder.bind(composition, presets);
 
                 if (dataToPlay == null) {
                     Toast.makeText(SearchDevicesActivity.this, "Can't decompose!", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(SearchDevicesActivity.this, "Success!!!", Toast.LENGTH_LONG).show();
+                    btnStart.setEnabled(true);
                 }
                 
+            }
+        });
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (DataToPlayForOnePreset dataToPlayForOnePreset : dataToPlay.getDataToPlayByPresets()) {
+                    for (DeviceModel deviceModel : devicesList) {
+                        if (deviceModel.getName().equals(dataToPlayForOnePreset.getOnePreset().getPresetName())) {
+                            deviceModel.getSession().sendRequest(CoAPMessageCode.POST, "play", null, dataToPlayForOnePreset.serialize())
+                            .subscribe(s -> {
+                                LogHelper.d("Data to " + deviceModel.getName() + " sended");
+                            }, throwable -> {
+                                LogHelper.w("Data to " + deviceModel.getName() + " don't sended: " + throwable);
+                            });
+                            break;
+                        }
+                    }
+                }
             }
         });
     }
@@ -242,6 +270,7 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
                 .flatMap(peerInfo -> {
                     deviceModel.setName(peerInfo.name);
                     deviceModel.setCid(peerInfo.cid);
+                    deviceModel.setSession(session);
                     return session.sendRequest(CoAPMessageCode.GET, "notes", null)
                             .map(s -> {
                                 deviceModel.setNotes(s);

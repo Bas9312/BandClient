@@ -1,8 +1,14 @@
 package com.bas.bandclient.models;
 
 import com.bas.bandclient.models.db.OnePresetModel;
+import com.google.gson.Gson;
 
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
 
@@ -33,5 +39,22 @@ public class DataToPlayForOnePreset {
 
     public void removeLastNote() {
         noteToPlays.pop();
+    }
+
+
+    public String serialize() {
+        return new Gson().toJson(this);
+    }
+
+    public static DataToPlayForOnePreset deserialize(String data) {
+        return new Gson().fromJson(data, DataToPlayForOnePreset.class);
+    }
+
+    public OnePreset getOnePreset() {
+        return onePreset;
+    }
+
+    public Collection<NoteToPlay> getNotes() {
+        return noteToPlays;
     }
 }

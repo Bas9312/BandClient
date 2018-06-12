@@ -12,4 +12,5 @@
     <string name="searched_devices">Searched devices</string>
     <string name="needed_notes">Needed notes: %s</string>
     <string name="decompose">Decompose</string>
+    <string name="start">Start</string>
 </resources>

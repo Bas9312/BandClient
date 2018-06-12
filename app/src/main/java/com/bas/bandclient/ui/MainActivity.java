@@ -40,11 +40,6 @@ public class MainActivity extends Activity {
 
     @BindView(R.id.btnPlaying)
     Button btnPlaying;
-
-    @BindView(R.id.btnConduct)
-    Button btnConduct;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,9 +48,17 @@ public class MainActivity extends Activity {
 
         Composition composition = FileReadHelper.readFile();
         List<OnePreset> presetList = new ArrayList<>();
-        List<Note> noteList = Arrays.asList(new Note(Note.D_SHARP, Note.Octave.GREAT), new Note(Note.A, Note.Octave.GREAT), new Note(Note.D, Note.Octave.GREAT));
+        List<Note> noteList = Arrays.asList(new Note(Note.E, Note.Octave.ONE_LINED),
+                new Note(Note.F_SHARP, Note.Octave.ONE_LINED),
+                new Note(Note.G_SHARP, Note.Octave.ONE_LINED),
+                new Note(Note.A, Note.Octave.ONE_LINED),
+                new Note(Note.H, Note.Octave.ONE_LINED),
+                new Note(Note.C, Note.Octave.TWO_LINED));
         OnePreset onePreset = new OnePreset("test", InstrumentType.fromString("blop"), noteList);
+        OnePreset twoPreset = new OnePreset("test2", InstrumentType.fromString("blop"), noteList);
+        //OnePreset threePreset = new OnePreset("test3", InstrumentType.fromString("blop"), noteList);
         presetList.add(onePreset);
+        presetList.add(twoPreset);
 
         DataToPlay dataToPlay = CompositionBinder.bind(composition, presetList);
         LogHelper.e("Data to play: " + (dataToPlay == null ? "null" : dataToPlay.toString()));
@@ -105,13 +108,6 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, SelectPresetActivity.class));
-            }
-        });
-
-        btnConduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SearchDevicesActivity.class));
             }
         });
     }

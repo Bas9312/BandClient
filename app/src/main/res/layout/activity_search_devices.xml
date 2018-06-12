@@ -31,6 +31,13 @@
                 android:id="@+id/btnDecompose"
                 android:text="@string/decompose"/>
 
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnStart"
+                android:text="@string/start"/>
+
         </LinearLayout>
 
         <TextView

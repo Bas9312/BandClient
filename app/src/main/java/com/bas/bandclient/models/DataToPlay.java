@@ -1,6 +1,9 @@
 package com.bas.bandclient.models;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by bas on 3/13/18.
@@ -31,6 +34,14 @@ public class DataToPlay {
         }
 
         innerData.get(onePreset).removeLastNote();
+    }
+
+    public DataToPlayForOnePreset getDataToPlayByPreset(OnePreset onePreset) {
+        return innerData.get(onePreset);
+    }
+
+    public Collection<DataToPlayForOnePreset> getDataToPlayByPresets() {
+        return innerData.values();
     }
 
     @Override

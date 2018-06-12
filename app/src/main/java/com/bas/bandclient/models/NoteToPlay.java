@@ -1,5 +1,7 @@
 package com.bas.bandclient.models;
 
+import com.ndmsystems.infrastructure.logging.LogHelper;
+
 import java.io.Serializable;
 
 /**
@@ -49,7 +51,7 @@ public class NoteToPlay implements Comparable, Serializable {
 
     @Override
     public String toString() {
-        return note.toString() + ", start in " + timeInMs + ", ends in " + (timeInMs + lengthInMs);
+        return note.toString() + ", start in " + timeInMs + ", ends in " + (timeInMs + (lengthInMs == null ? 100L : lengthInMs));
     }
 
     public Note getNote() {
@@ -61,7 +63,12 @@ public class NoteToPlay implements Comparable, Serializable {
     }
 
     public Long getLengthInMs() {
-        return lengthInMs;
+        if (lengthInMs != null) {
+            return lengthInMs;
+        } else {
+            LogHelper.e("Length of note: " + this.toString() + "is null!");
+            return 100L;
+        }
     }
 
     public void setLengthInMs(Long lengthInMs) {

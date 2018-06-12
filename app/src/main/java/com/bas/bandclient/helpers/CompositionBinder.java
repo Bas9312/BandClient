@@ -21,12 +21,12 @@ import java.util.Stack;
 
 public class CompositionBinder {
 
-    public static Long TIME_BETWEEN_NOTES = 500L;
+    public static Long TIME_BETWEEN_NOTES = 300L;
 
     public static DataToPlay bind(Composition composition, List<OnePreset> presetModelList) {
         HashMap<InstrumentType, List<NoteToPlay>> toPlayHashMap = getNotesByInstrumentType(composition);
 
-        HashMap<InstrumentType, List<OnePreset>> presetsByInstrumentType = getPresetsByInstrumentType(presetModelList);
+        HashMap<String, List<OnePreset>> presetsByInstrumentType = getPresetsByInstrumentType(presetModelList);
 
         if (toPlayHashMap.size() > presetsByInstrumentType.size()) {
             System.out.println("Number of types for play more then player types");
@@ -36,7 +36,7 @@ public class CompositionBinder {
         return bindData(toPlayHashMap, presetsByInstrumentType);
     }
 
-    private static DataToPlay bindData(HashMap<InstrumentType, List<NoteToPlay>> toPlayHashMap, HashMap<InstrumentType, List<OnePreset>> presetsByInstrumentType) {
+    private static DataToPlay bindData(HashMap<InstrumentType, List<NoteToPlay>> toPlayHashMap, HashMap<String, List<OnePreset>> presetsByInstrumentType) {
         DataToPlay dataToPlay = new DataToPlay();
 
 
@@ -48,8 +48,8 @@ public class CompositionBinder {
             notesToBind.addAll(values);
             List<OnePreset> presetsToBind = null;
 
-            for (Map.Entry<InstrumentType, List<OnePreset>> instrumentTypeOnePresetEntry : presetsByInstrumentType.entrySet()) {
-                if (instrumentTypeOnePresetEntry.getKey().toString().equals(instrumentType.toString()))
+            for (Map.Entry<String, List<OnePreset>> instrumentTypeOnePresetEntry : presetsByInstrumentType.entrySet()) {
+                if (instrumentTypeOnePresetEntry.getKey().equals(instrumentType.toString()))
                     presetsToBind = instrumentTypeOnePresetEntry.getValue();
             }
 
@@ -73,10 +73,23 @@ public class CompositionBinder {
         for (OnePreset preset : presetsThatCanPlayNote) {
             NoteToPlay lastNote = dataToPlay.getLastNoteForPreset(preset);
 
+            Long timeOfEnd = null;
+            if (lastNote != null) {
+                timeOfEnd = lastNote.getTimeInMs();
+                if (!preset.getType().toString().equals("blop")) {
+                    timeOfEnd = timeOfEnd + lastNote.getLengthInMs();
+                }
+            }
+
             if (lastNote == null
-                    || (lastNote.getTimeInMs() + lastNote.getLengthInMs() + TIME_BETWEEN_NOTES) <= noteToPlay.getTimeInMs()) {
+                    || (timeOfEnd + TIME_BETWEEN_NOTES) <= noteToPlay.getTimeInMs()) {
                 dataToPlay.addNoteToPreset(preset, noteToPlay);
-                DataToPlay dataForReturn = addNoteToPlay(dataToPlay, presetsToBind, notesToBind);
+
+                List<OnePreset> newPresetsList = new ArrayList<>(presetsToBind);
+                newPresetsList.remove(0);
+                newPresetsList.add(preset);
+
+                DataToPlay dataForReturn = addNoteToPlay(dataToPlay, newPresetsList, notesToBind);
                 if (dataForReturn != null) {
                     return dataForReturn;
                 } else {
@@ -112,15 +125,15 @@ public class CompositionBinder {
         return toPlayHashMap;
     }
 
-    private static HashMap<InstrumentType, List<OnePreset>> getPresetsByInstrumentType(List<OnePreset> presetModelList) {
-        HashMap<InstrumentType, List<OnePreset>> presetsByInstrumentType = new HashMap<>();
+    private static HashMap<String, List<OnePreset>> getPresetsByInstrumentType(List<OnePreset> presetModelList) {
+        HashMap<String, List<OnePreset>> presetsByInstrumentType = new HashMap<>();
         for (OnePreset onePresetModel : presetModelList) {
-            if (!presetsByInstrumentType.containsKey(onePresetModel.getType())) {
-                presetsByInstrumentType.put(onePresetModel.getType(), new ArrayList<OnePreset>());
+            if (!presetsByInstrumentType.containsKey(onePresetModel.getType().toString())) {
+                presetsByInstrumentType.put(onePresetModel.getType().toString(), new ArrayList<OnePreset>());
             }
-            List<OnePreset> tempPresetList = presetsByInstrumentType.get(onePresetModel.getType());
+            List<OnePreset> tempPresetList = presetsByInstrumentType.get(onePresetModel.getType().toString());
             tempPresetList.add(onePresetModel);
-            presetsByInstrumentType.put(onePresetModel.getType(), tempPresetList);
+            presetsByInstrumentType.put(onePresetModel.getType().toString(), tempPresetList);
         }
         return presetsByInstrumentType;
     }

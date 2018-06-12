@@ -18,6 +18,7 @@ import com.leff.midi.event.meta.MetaEvent;
 import com.leff.midi.event.meta.Tempo;
 import com.leff.midi.event.meta.TrackName;
 import com.leff.midi.util.MidiUtil;
+import com.ndmsystems.infrastructure.logging.LogHelper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class FileReadHelper {
     public static Composition readFile() {
         MidiFile midi = null;
         try {
-            midi = new MidiFile(BandClientApplication.getContext().getResources().openRawResource(R.raw.simple));
+            midi = new MidiFile(BandClientApplication.getContext().getResources().openRawResource(R.raw.kuznechic));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,8 +60,7 @@ public class FileReadHelper {
                     if (event instanceof TrackName) {
                         trackName = ((TrackName) event).getTrackName();
                     }
-                    if (event instanceof NoteOn
-                            && event.getDelta() != 0) {
+                    if (event instanceof NoteOn) {
                         NoteOn noteOnEvent = (NoteOn) event;
                         if (trackNotes.size() != 0) {
                             ChannelEvent previousNote = trackNotes.get(trackNotes.size() -1);
@@ -106,9 +106,11 @@ public class FileReadHelper {
                 }
             } else {
                 if (event instanceof NoteOff) {
-                    NoteToPlay previous = noteToPlays.get(noteToPlays.size() - 1);
-                    previous.setLengthInMs(event.getTick() - previous.getTimeInMs());
-                    noteToPlays.set(noteToPlays.size() - 1, previous);
+                    if (noteToPlays.size() > 0) {
+                        NoteToPlay previous = noteToPlays.get(noteToPlays.size() - 1);
+                        previous.setLengthInMs(event.getTick() - previous.getTimeInMs());
+                        noteToPlays.set(noteToPlays.size() - 1, previous);
+                    } else LogHelper.e("NoteOff then 0 notes at list");
                 }
             }
         }

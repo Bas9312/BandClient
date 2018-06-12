@@ -21,6 +21,7 @@ import com.bas.bandclient.BandClientApplication;
 import com.bas.bandclient.Consts;
 import com.bas.bandclient.R;
 import com.bas.bandclient.helpers.ConvertHelper;
+import com.bas.bandclient.models.DataToPlayForOnePreset;
 import com.bas.bandclient.models.Note;
 import com.bas.bandclient.models.NoteToPlay;
 import com.bas.bandclient.models.PresetManager;
@@ -70,11 +71,6 @@ public class PlayingActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_instruments_visual_editor);
-        playingQueue.add(new NoteToPlay(Note.parseFromString("C0"), 5000L, 100L));
-        playingQueue.add(new NoteToPlay(Note.parseFromString("C0"), 6000L, 100L));
-        playingQueue.add(new NoteToPlay(Note.parseFromString("D0"), 6000L, 100L));
-        playingQueue.add(new NoteToPlay(Note.parseFromString("D0"), 10000L, 100L));
-        playingQueue.add(new NoteToPlay(Note.parseFromString("C0"), 15000L, 100L));
         getSupportActionBar().show();
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -121,9 +117,9 @@ public class PlayingActivity extends AppCompatActivity {
                         playingNoteView.setText(null);
                         playingQueue.remove();
                     } else {
-                        if (diffTime < 3000) {
+                        if (diffTime < 500) {
                             if (!changedNotes.contains(playingNoteView)) {
-                                playingNoteView.setColor(Color.argb((int) (Math.max(50, 255 - (diffTime / 3000.0) * 255)), 255, 0, 0));
+                                playingNoteView.setColor(Color.argb((int) (Math.max(50, 255 - (diffTime / 500.0) * 255)), 255, 0, 0));
                                 playingNoteView.setText(String.format("%.1fs", diffTime * 1.0 / 1000));
                                 changedNotes.add(playingNoteView);
                             }
@@ -143,14 +139,21 @@ public class PlayingActivity extends AppCompatActivity {
         super.onResume();
 
         BandClientApplication.getContext().getStorage().put(Consts.PREFS_CURRENT_NOTES, PresetManager.getNotesString(preset));
-        timeOfStart = System.currentTimeMillis();
-        //handler.postDelayed(runnable, 1000);
+        BandClientApplication.getContext().setOnStartPlay(new BandClientApplication.OnStartPlay() {
+            @Override
+            public void onStartPlay(DataToPlayForOnePreset dataToPlayForOnePreset) {
+                playingQueue = new ArrayDeque<>(dataToPlayForOnePreset.getNotes());
+                timeOfStart = System.currentTimeMillis();
+                handler.postDelayed(runnable, 1000);
+            }
+        });
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         BandClientApplication.getContext().getStorage().put(Consts.PREFS_CURRENT_NOTES, "");
+        BandClientApplication.getContext().setOnStartPlay(null);
     }
 
     private PlayingNoteView getNoteViewByNote(NoteToPlay nextNote) {
