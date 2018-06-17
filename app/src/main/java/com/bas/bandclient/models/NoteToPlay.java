@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class NoteToPlay implements Comparable, Serializable {
     private final Note note;
-    private final Long timeInMs;
+    private Long timeInMs;
     private Long lengthInMs;
 
     public NoteToPlay(Note note, Long timeInMs) {
@@ -22,6 +22,12 @@ public class NoteToPlay implements Comparable, Serializable {
         this.note = note;
         this.timeInMs = timeInMs;
         this.lengthInMs = lengthInMs;
+    }
+
+    public NoteToPlay(NoteToPlay noteToPlay) {
+        this.timeInMs = Long.valueOf(noteToPlay.getTimeInMs());
+        this.lengthInMs = Long.valueOf(noteToPlay.getLengthInMs());
+        this.note = noteToPlay.getNote();
     }
 
     @Override
@@ -56,6 +62,11 @@ public class NoteToPlay implements Comparable, Serializable {
 
     public Note getNote() {
         return note;
+    }
+
+
+    public void setTimeInMs(Long timeInMs) {
+        this.timeInMs = timeInMs;
     }
 
     public Long getTimeInMs() {

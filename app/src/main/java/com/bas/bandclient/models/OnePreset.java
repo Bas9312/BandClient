@@ -32,7 +32,9 @@ public class OnePreset {
     }
 
     public InstrumentType getType() {
-        return type;
+        if (type != null) {
+            return type;
+        } else return InstrumentType.fromString("blop");
     }
 
     public String getPresetName() {

@@ -60,7 +60,7 @@ public class MainActivity extends Activity {
         presetList.add(onePreset);
         presetList.add(twoPreset);
 
-        DataToPlay dataToPlay = CompositionBinder.bind(composition, presetList);
+        DataToPlay dataToPlay = CompositionBinder.bind(composition, presetList, 1000);
         LogHelper.e("Data to play: " + (dataToPlay == null ? "null" : dataToPlay.toString()));
 
         btnInstrumentsList.setOnClickListener(new View.OnClickListener() {

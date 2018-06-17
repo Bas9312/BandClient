@@ -49,6 +49,41 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:id="@+id/tvSpeed"
+            android:text="Speed: 1.00"/>
+
+        <SeekBar
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:max="40"
+            android:progress="20"
+            android:id="@+id/sbSpeed"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:id="@+id/tvTimeBetween"
+            android:text="Min time between notes: 1.00s"/>
+
+        <SeekBar
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5dp"
+            android:max="60"
+            android:progress="20"
+            android:id="@+id/sbTimeBetween"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/devices"
             android:layout_width="match_parent"

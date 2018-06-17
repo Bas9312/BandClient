@@ -2,11 +2,11 @@ package com.bas.bandclient.helpers;
 
 import com.bas.bandclient.models.Composition;
 import com.bas.bandclient.models.DataToPlay;
-import com.bas.bandclient.models.DataToPlayForOnePreset;
 import com.bas.bandclient.models.InstrumentType;
 import com.bas.bandclient.models.NoteToPlay;
 import com.bas.bandclient.models.OnePreset;
 import com.bas.bandclient.models.Track;
+import com.ndmsystems.infrastructure.logging.LogHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,9 +21,7 @@ import java.util.Stack;
 
 public class CompositionBinder {
 
-    public static Long TIME_BETWEEN_NOTES = 300L;
-
-    public static DataToPlay bind(Composition composition, List<OnePreset> presetModelList) {
+    public static DataToPlay bind(Composition composition, List<OnePreset> presetModelList, long timeBetweenNotes) {
         HashMap<InstrumentType, List<NoteToPlay>> toPlayHashMap = getNotesByInstrumentType(composition);
 
         HashMap<String, List<OnePreset>> presetsByInstrumentType = getPresetsByInstrumentType(presetModelList);
@@ -33,10 +31,10 @@ public class CompositionBinder {
             return null;
         }
 
-        return bindData(toPlayHashMap, presetsByInstrumentType);
+        return bindData(toPlayHashMap, presetsByInstrumentType, timeBetweenNotes);
     }
 
-    private static DataToPlay bindData(HashMap<InstrumentType, List<NoteToPlay>> toPlayHashMap, HashMap<String, List<OnePreset>> presetsByInstrumentType) {
+    private static DataToPlay bindData(HashMap<InstrumentType, List<NoteToPlay>> toPlayHashMap, HashMap<String, List<OnePreset>> presetsByInstrumentType, long timeBetweenNotes) {
         DataToPlay dataToPlay = new DataToPlay();
 
 
@@ -57,14 +55,14 @@ public class CompositionBinder {
                 System.out.println("No one can't play " + instrumentType.toString());
                 return null;
             }
-            dataToPlay = addNoteToPlay(dataToPlay, presetsToBind, notesToBind);
+            dataToPlay = addNoteToPlay(dataToPlay, presetsToBind, notesToBind, timeBetweenNotes);
             if (dataToPlay == null) return null;
         }
 
         return dataToPlay;
     }
 
-    private static DataToPlay addNoteToPlay(DataToPlay dataToPlay, List<OnePreset> presetsToBind, Stack<NoteToPlay> notesToBind) {
+    private static DataToPlay addNoteToPlay(DataToPlay dataToPlay, List<OnePreset> presetsToBind, Stack<NoteToPlay> notesToBind, long timeBetweenNotes) {
         if (notesToBind.empty()) {
             return dataToPlay;
         }
@@ -82,14 +80,14 @@ public class CompositionBinder {
             }
 
             if (lastNote == null
-                    || (timeOfEnd + TIME_BETWEEN_NOTES) <= noteToPlay.getTimeInMs()) {
+                    || (timeOfEnd + timeBetweenNotes) <= noteToPlay.getTimeInMs()) {
                 dataToPlay.addNoteToPreset(preset, noteToPlay);
 
                 List<OnePreset> newPresetsList = new ArrayList<>(presetsToBind);
-                newPresetsList.remove(0);
+                newPresetsList.remove(preset);
                 newPresetsList.add(preset);
 
-                DataToPlay dataForReturn = addNoteToPlay(dataToPlay, newPresetsList, notesToBind);
+                DataToPlay dataForReturn = addNoteToPlay(dataToPlay, newPresetsList, notesToBind, timeBetweenNotes);
                 if (dataForReturn != null) {
                     return dataForReturn;
                 } else {

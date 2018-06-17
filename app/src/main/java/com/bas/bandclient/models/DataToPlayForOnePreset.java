@@ -20,6 +20,7 @@ public class DataToPlayForOnePreset {
 
     private final OnePreset onePreset;
     private final Stack<NoteToPlay> noteToPlays = new Stack<>();
+    private Long timeOfStart = null;
 
     public DataToPlayForOnePreset(OnePreset onePreset) {
         this.onePreset = onePreset;
@@ -42,7 +43,8 @@ public class DataToPlayForOnePreset {
     }
 
 
-    public String serialize() {
+    public String serialize(Long timeOfStart) {
+        this.timeOfStart = timeOfStart;
         return new Gson().toJson(this);
     }
 
@@ -56,5 +58,13 @@ public class DataToPlayForOnePreset {
 
     public Collection<NoteToPlay> getNotes() {
         return noteToPlays;
+    }
+
+    public Long getTimeOfStart() {
+        return timeOfStart;
+    }
+
+    public void setTimeOfStart(Long timeOfStart) {
+        this.timeOfStart = timeOfStart;
     }
 }

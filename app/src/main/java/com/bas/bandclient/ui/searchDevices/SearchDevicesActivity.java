@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +63,17 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
     @BindView(R.id.btnStart)
     protected Button btnStart;
 
+
+    @BindView(R.id.tvSpeed)
+    protected TextView tvSpeed;
+    @BindView(R.id.sbSpeed)
+    protected SeekBar sbSpeed;
+
+    @BindView(R.id.tvTimeBetween)
+    protected TextView tvTimeBetween;
+    @BindView(R.id.sbTimeBetween)
+    protected SeekBar sbTimeBetween;
+
     @BindView(R.id.devices)
     protected RecyclerView devices;
 
@@ -81,6 +93,40 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
         Composition composition = (Composition) getIntent().getSerializableExtra(COMPOSITION_EXTRA);
         StringBuilder stringBuilder = new StringBuilder();
         HashMap<String, String> notes = new HashMap<>();
+
+        sbSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                tvSpeed.setText(String.format("Speed: %.2f", 0.05 * ((double) seekBar.getProgress())));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        sbTimeBetween.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                tvTimeBetween.setText(String.format("Min time between notes: %.2fs", 0.05 * ((double) seekBar.getProgress())));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         for (Track track : composition.getTrackList()) {
             for (NoteToPlay noteToPlay: track.getNoteToPlays()) {
@@ -104,26 +150,45 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
             public void onClick(View view) {
                 List<OnePreset> presets = new ArrayList<>();
 
-                for (DeviceModel deviceModel : devicesList) {
-                    List<Note> notesList = new ArrayList<>();
+                if (devicesList != null && devicesList.size() > 0) {
+                    for (DeviceModel deviceModel : devicesList) {
+                        List<Note> notesList = new ArrayList<>();
 
-                    String type = null;
-                    for (String noteString : deviceModel.getNotes().split(",")) {
-                        String[] parts = noteString.trim().split(" ");
-                        type = parts[0];
+                        String type = null;
+                        for (String noteString : deviceModel.getNotes().split(",")) {
+                            String[] parts = noteString.trim().split(" ");
 
-                        notesList.add(Note.parseFromString(parts[1]));
+                            if (parts.length >= 2) {
+                                type = parts[0];
+                                notesList.add(Note.parseFromString(parts[1]));
+                            } else LogHelper.e("Wrong note: " + noteString);
+                        }
+
+                        presets.add(new OnePreset(deviceModel.getName(), InstrumentType.fromString(type), notesList));
                     }
 
-                    presets.add(new OnePreset(deviceModel.getName(), InstrumentType.fromString(type), notesList));
-                }
-                dataToPlay = CompositionBinder.bind(composition, presets);
+                    double speed = sbSpeed.getProgress() * 0.05;
 
-                if (dataToPlay == null) {
-                    Toast.makeText(SearchDevicesActivity.this, "Can't decompose!", Toast.LENGTH_LONG).show();
+                    Composition tempComposition = new Composition(composition);
+
+                    for (Track track : tempComposition.getTrackList()) {
+                        for (NoteToPlay noteToPlay : track.getNoteToPlays()) {
+                            noteToPlay.setTimeInMs((long) (noteToPlay.getTimeInMs() / speed));
+                        }
+                    }
+
+                    dataToPlay = CompositionBinder.bind(tempComposition, presets, sbTimeBetween.getProgress() * 50);
+
+                    if (dataToPlay == null) {
+                        Toast.makeText(SearchDevicesActivity.this, "Can't decompose!", Toast.LENGTH_LONG).show();
+                        btnStart.setEnabled(false);
+                    } else {
+                        Toast.makeText(SearchDevicesActivity.this, "Success!!!", Toast.LENGTH_LONG).show();
+                        btnStart.setEnabled(true);
+                    }
                 } else {
-                    Toast.makeText(SearchDevicesActivity.this, "Success!!!", Toast.LENGTH_LONG).show();
-                    btnStart.setEnabled(true);
+                    Toast.makeText(SearchDevicesActivity.this, "Can't decompose at 0 devices!", Toast.LENGTH_LONG).show();
+                    btnStart.setEnabled(false);
                 }
                 
             }
@@ -132,10 +197,11 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Long timeOfStart = System.currentTimeMillis() + 5000;
                 for (DataToPlayForOnePreset dataToPlayForOnePreset : dataToPlay.getDataToPlayByPresets()) {
                     for (DeviceModel deviceModel : devicesList) {
                         if (deviceModel.getName().equals(dataToPlayForOnePreset.getOnePreset().getPresetName())) {
-                            deviceModel.getSession().sendRequest(CoAPMessageCode.POST, "play", null, dataToPlayForOnePreset.serialize())
+                            deviceModel.getSession().sendRequest(CoAPMessageCode.POST, "play", null, dataToPlayForOnePreset.serialize(timeOfStart))
                             .subscribe(s -> {
                                 LogHelper.d("Data to " + deviceModel.getName() + " sended");
                             }, throwable -> {

@@ -90,7 +90,6 @@ public class NoteView extends View implements View.OnTouchListener{
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                isClicked = false;
                 float parentWidth = ((View)getParent()).getWidth();
                 float parentHeight = ((View)getParent()).getHeight();
 
@@ -101,6 +100,10 @@ public class NoteView extends View implements View.OnTouchListener{
                 float y = event.getRawY() + dY;
                 if (y < 0) y = 0;
                 if (y > (parentHeight - getHeight())) y = parentHeight - getHeight();
+
+                if (Math.abs(dX) + Math.abs(dY) > 500) {
+                    isClicked = false;
+                }
 
                 view.animate()
                         .x(x)

@@ -18,6 +18,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -46,6 +47,7 @@ dependencies {
     implementation project(path: ':submodules:api:app')
     implementation "com.google.code.gson:gson:2.8.1"
 
+    compile 'com.android.support:multidex:1.0.3'
     compile 'com.google.code.gson:gson:2.7'
     compile 'cz.msebera.android:httpclient:4.4.1.1'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'

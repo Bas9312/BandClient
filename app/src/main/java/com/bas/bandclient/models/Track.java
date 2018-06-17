@@ -1,6 +1,7 @@
 package com.bas.bandclient.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +23,15 @@ public class Track implements Serializable {
         this.noteToPlays = noteToPlays;
         this.name = name;
         this.type = instrumentType;
+    }
+
+    public Track(Track track) {
+        this.name = track.getName();
+        this.type = InstrumentType.fromString(track.getType().toString());
+        this.noteToPlays = new ArrayList<>();
+        for (NoteToPlay noteToPlay : track.getNoteToPlays()) {
+            this.noteToPlays.add(new NoteToPlay(noteToPlay));
+        }
     }
 
     public List<NoteToPlay> getNoteToPlays() {

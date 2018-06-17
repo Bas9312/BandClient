@@ -30,7 +30,13 @@ public class PlayingNoteView extends View{
     private String text = null;
 
     private Paint circlePaint = new Paint();
+    private Paint blackPaint = new Paint();
+    private Paint whitePaint = new Paint();
     private Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    double procent = 100.0;
+    private TypeOfFilling typeOfFilling = TypeOfFilling.Circle;
+
+    public enum TypeOfFilling {Circle, BottomTop}
 
     public PlayingNoteView(Context context) {
         super(context);
@@ -48,6 +54,8 @@ public class PlayingNoteView extends View{
 
     private void init() {
         circlePaint.setColor(Color.BLACK);
+        blackPaint.setColor(Color.BLACK);
+        whitePaint.setColor(Color.WHITE);
         textPaint.setColor(Color.WHITE);
         textPaint.setTextAlign(Paint.Align.CENTER);
 
@@ -66,7 +74,17 @@ public class PlayingNoteView extends View{
     protected void onDraw(Canvas canvas) {
         System.out.println("onDraw");
 
-        canvas.drawCircle(getHeight() / 2, getHeight() / 2, getHeight() / 2, circlePaint);
+        if (typeOfFilling == TypeOfFilling.Circle) {
+            if (procent < 99.5) {
+                canvas.drawCircle(getHeight() / 2, getHeight() / 2, getHeight() / 2, blackPaint);
+                canvas.drawCircle(getHeight() / 2, getHeight() / 2, getHeight() / 2 - 10, whitePaint);
+            }
+            canvas.drawCircle(getHeight() / 2, getHeight() / 2, (float) (getHeight() * (procent / 100.0) / 2), circlePaint);
+        } else if (typeOfFilling == TypeOfFilling.BottomTop) {
+            canvas.drawCircle(getHeight() / 2, getHeight() / 2, (float) (getHeight() / 2), circlePaint);
+            canvas.drawRect(0, 0, getHeight(), (float) (getHeight() * ((100.0 - procent) / 100.0)), whitePaint);
+
+        }
 
         if (note.getNote() != null) {
             System.out.println("Draw noteText: " + note.getNote().toString());
@@ -93,5 +111,10 @@ public class PlayingNoteView extends View{
 
     public int getColor() {
         return circlePaint.getColor();
+    }
+
+    public void setProcent(double procent, TypeOfFilling typeOfFilling) {
+        this.procent = procent;
+        this.typeOfFilling = typeOfFilling;
     }
 }
