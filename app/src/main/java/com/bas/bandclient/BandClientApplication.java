@@ -41,6 +41,7 @@ public class BandClientApplication extends Application {
     private static BandClientApplication instance;
     private static IStorage storage;
     private static ICoalaStorage coalaStorage;
+    private static Long timeOfReceiveSync = null;
     private OnStartPlay onStartPlay;
 
     public void setOnStartPlay(OnStartPlay onStartPlay) {
@@ -116,6 +117,15 @@ public class BandClientApplication extends Application {
                 }
                 LogHelper.d("Receive: " + inputData.message.getPayload().toString() + " " + dataToPlayForOnePreset);
                 return new CoAPResourceOutput(new CoAPMessagePayload("Ok!"), CoAPMessageCode.CoapCodeContent, CoAPMessage.MediaType.Json);
+            }
+        });
+
+        KeeneticAPI.getDependencyGraph().getGumService().getCoala().addResource("syncronize", CoAPRequestMethod.POST, new CoAPResource.CoAPResourceHandler() {
+            @Override
+            public CoAPResourceOutput onReceive(CoAPResourceInput inputData) {
+                BandClientApplication.timeOfReceiveSync = Long.valueOf(inputData.message.getPayload().toString());
+                LogHelper.d("Receive syncronize: " + inputData.message.getPayload().toString());
+                return new CoAPResourceOutput(new CoAPMessagePayload(String.valueOf(System.currentTimeMillis())), CoAPMessageCode.CoapCodeContent, CoAPMessage.MediaType.Json);
             }
         });
 

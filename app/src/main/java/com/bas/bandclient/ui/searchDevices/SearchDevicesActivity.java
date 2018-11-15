@@ -197,16 +197,25 @@ public class SearchDevicesActivity extends Activity implements DeviceAdapter.Lis
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Long timeOfStart = System.currentTimeMillis() + 5000;
+                Long currentTime = System.currentTimeMillis();
+                Long timeOfStart = currentTime + 5000;
                 for (DataToPlayForOnePreset dataToPlayForOnePreset : dataToPlay.getDataToPlayByPresets()) {
                     for (DeviceModel deviceModel : devicesList) {
                         if (deviceModel.getName().equals(dataToPlayForOnePreset.getOnePreset().getPresetName())) {
-                            deviceModel.getSession().sendRequest(CoAPMessageCode.POST, "play", null, dataToPlayForOnePreset.serialize(timeOfStart))
-                            .subscribe(s -> {
-                                LogHelper.d("Data to " + deviceModel.getName() + " sended");
-                            }, throwable -> {
-                                LogHelper.w("Data to " + deviceModel.getName() + " don't sended: " + throwable);
-                            });
+                            deviceModel.getSession().sendRequest(CoAPMessageCode.POST, "syncronize", null, String.valueOf(currentTime))
+                                    .subscribe(s -> {
+                                        Long sendingTime = System.currentTimeMillis() - currentTime;
+                                        Long diffTime = Long.valueOf(s) - (currentTime + sendingTime / 2);
+                                        LogHelper.d("Received syncronize client time: " + s + ", server sendingTime = " + sendingTime + ", diffTime = " + diffTime);
+                                        deviceModel.getSession().sendRequest(CoAPMessageCode.POST, "play", null, dataToPlayForOnePreset.serialize(timeOfStart + diffTime))
+                                                .subscribe(string -> {
+                                                    LogHelper.d("Data to " + deviceModel.getName() + " sended");
+                                                }, throwable -> {
+                                                    LogHelper.w("Data to " + deviceModel.getName() + " don't sended: " + throwable);
+                                                });
+                                    }, throwable -> {
+                                        LogHelper.w("Time don't sended: " + throwable);
+                                    });
                             break;
                         }
                     }

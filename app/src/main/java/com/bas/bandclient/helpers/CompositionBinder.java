@@ -3,6 +3,7 @@ package com.bas.bandclient.helpers;
 import com.bas.bandclient.models.Composition;
 import com.bas.bandclient.models.DataToPlay;
 import com.bas.bandclient.models.InstrumentType;
+import com.bas.bandclient.models.Note;
 import com.bas.bandclient.models.NoteToPlay;
 import com.bas.bandclient.models.OnePreset;
 import com.bas.bandclient.models.Track;
@@ -102,8 +103,11 @@ public class CompositionBinder {
     private static List<OnePreset> getPresetsThatCanPlayNote(NoteToPlay oneNote, List<OnePreset> presetsToBind) {
         List<OnePreset> forReturn = new ArrayList<>();
         for (OnePreset presetModel : presetsToBind) {
-            if (presetModel.getNotes().contains(oneNote.getNote())) {
-                forReturn.add(presetModel);
+            for (Note note : presetModel.getNotes()) {
+                if (note.toString().equals(oneNote.getNote().toString())) {
+                    forReturn.add(presetModel);
+                    break;
+                }
             }
         }
         return forReturn;

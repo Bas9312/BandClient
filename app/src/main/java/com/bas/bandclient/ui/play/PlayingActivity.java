@@ -8,10 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bas.bandclient.BandClientApplication;
@@ -25,6 +27,7 @@ import com.bas.bandclient.models.db.OneNoteModel;
 import com.bas.bandclient.models.db.OnePresetModel;
 import com.bas.bandclient.ui.widgets.OneVisualNote;
 import com.bas.bandclient.ui.widgets.PlayingNoteView;
+import com.ndmsystems.infrastructure.logging.LogHelper;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -104,6 +107,7 @@ public class PlayingActivity extends AppCompatActivity {
             public void run() {
                 Long currentTime = System.currentTimeMillis();
                 if (currentTime > timeOfStart) {
+                    flFrame.setBackgroundColor(Color.WHITE);
                     Iterator<NoteToPlay> it = playingQueue.iterator();
 
                     List<PlayingNoteView> changedNotes = new ArrayList<>();
@@ -150,6 +154,11 @@ public class PlayingActivity extends AppCompatActivity {
                         playingNoteView.invalidate();
                     }
 
+                } else {
+                    if (timeOfStart - currentTime < 2000) {
+                        int color = Color.argb((int) (((timeOfStart - currentTime) / 2000.0) * 255), 0, 0, 0);
+                        flFrame.setBackgroundColor(color);
+                    }
                 }
                 handler.postDelayed(runnable, 10);
             }

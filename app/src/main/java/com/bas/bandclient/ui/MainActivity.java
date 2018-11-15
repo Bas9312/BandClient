@@ -49,18 +49,26 @@ public class MainActivity extends Activity {
         Composition composition = FileReadHelper.readFile();
         List<OnePreset> presetList = new ArrayList<>();
         List<Note> noteList = Arrays.asList(new Note(Note.E, Note.Octave.ONE_LINED),
-                new Note(Note.F_SHARP, Note.Octave.ONE_LINED),
-                new Note(Note.G_SHARP, Note.Octave.ONE_LINED),
                 new Note(Note.A, Note.Octave.ONE_LINED),
                 new Note(Note.H, Note.Octave.ONE_LINED),
                 new Note(Note.C, Note.Octave.TWO_LINED));
+
+        List<Note> noteList2 = Arrays.asList(
+                new Note(Note.A, Note.Octave.ONE_LINED),
+                new Note(Note.H, Note.Octave.ONE_LINED),
+                new Note(Note.C, Note.Octave.TWO_LINED));
+
+        List<Note> noteList3 = Arrays.asList(new Note(Note.G_SHARP, Note.Octave.ONE_LINED),
+                new Note(Note.A, Note.Octave.ONE_LINED),
+                new Note(Note.H, Note.Octave.ONE_LINED));
         OnePreset onePreset = new OnePreset("test", InstrumentType.fromString("blop"), noteList);
-        OnePreset twoPreset = new OnePreset("test2", InstrumentType.fromString("blop"), noteList);
-        //OnePreset threePreset = new OnePreset("test3", InstrumentType.fromString("blop"), noteList);
+        OnePreset twoPreset = new OnePreset("test2", InstrumentType.fromString("blop"), noteList2);
+        OnePreset threePreset = new OnePreset("test3", InstrumentType.fromString("blop"), noteList3);
         presetList.add(onePreset);
         presetList.add(twoPreset);
+        presetList.add(threePreset);
 
-        DataToPlay dataToPlay = CompositionBinder.bind(composition, presetList, 1000);
+        DataToPlay dataToPlay = CompositionBinder.bind(composition, presetList, 300);
         LogHelper.e("Data to play: " + (dataToPlay == null ? "null" : dataToPlay.toString()));
 
         btnInstrumentsList.setOnClickListener(new View.OnClickListener() {

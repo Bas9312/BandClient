@@ -6,5 +6,5 @@
     android:layout_gravity="center"
     android:clickable="false"
     android:focusable="false"
-    android:id="@+id/flFrame">
-</FrameLayout>
+    android:id="@+id/flFrame"
+    android:background="#FFFFFF"/>
